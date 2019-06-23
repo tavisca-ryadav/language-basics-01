@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Linq;
 namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 {
     class Program
@@ -22,57 +23,64 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 
         public static int FindDigit(string equation)
         {
-            /* Splitting the equation into three parts A,B,C */
+            // Splitting the equation into three parts A,B,C
 
-            string[] token = equation.Split("=");
-            string[] equ = token[0].Split("*");
-            string a = equ[0],b=equ[1],c=token[1];
-            int an,bn,cn;
+            List<string> tokens = new List<string>();
+            tokens = equation.Split('=','*').ToList();
+            var A = tokens[0];
+            var B = tokens[1];
+            var C = tokens[2];
 
-            /*First checking if C contains ? character */
+            //null check on tokens
+            if(A==null || B==null || C==null)
+                return -1;
 
-            if(c.Contains("?")){
-                an = Convert.ToInt32(a);
-                bn = Convert.ToInt32(b);
-                string cnew= Convert.ToString(an*bn);
+            // First checking if C contains ? character 
 
-                /* findingDigit method will compare two strings  for different characters or length */
-                return findingDigit(cnew,c);
+            if(C.Contains("?")){
+                var numeric_A = Convert.ToInt32(A);
+                var numeric_B = Convert.ToInt32(B);
+               
+                // findingDigit method will compare two strings  for different characters or length */
+                return FindDigit(Convert.ToString(numeric_A * numeric_B),C);
             }
 
-            /*Checking for A only if it contains '?' if B contains then swap B with A */
+            // Checking for A only if it contains '?' if B contains then swap B with A */
 
             else{
-                if(b.Contains("?")){
-                    string t= a;
-                    a=b;
-                    b=t;
-                }
-                cn = Convert.ToInt32(c);
-                bn = Convert.ToInt32(b);
-                if(cn%bn!=0 || bn==0)
+                if(B.Contains("?"))
+                    Swap(ref A,ref B);
+                    
+                var numeric_C = Convert.ToInt32(C);
+                var numeric_B = Convert.ToInt32(B);
+
+                if(numeric_C % numeric_B !=0 || numeric_B == 0)
                     return -1;
-                string anew= Convert.ToString(cn/bn);
                 
-                 /* findingDigit method will compare two strings  for different characters or length */
-                return findingDigit(anew,a);
+                 // findingDigit method will compare two strings  for different characters or length 
+                return FindDigit(Convert.ToString(numeric_C / numeric_B) , A);
             }
-            throw new NotImplementedException();
         }
 
-        public static int findingDigit(string st,string c){
-            int ans = -1;
-            if(st.Length!=c.Length)
-                return ans;
-            for(int i=0;i<c.Length;i++){
-                if(st[i]!=c[i]){
-                    if(c[i].Equals('?')){
-                        ans = st[i]-'0';
+        public static int FindDigit(string str1,string str2){
+            var answer = -1;
+            if(str1.Length!=str2.Length)
+                return answer;
+            for(var i=0;i<str1.Length;i++){
+                if(str1[i]!=str2[i]){
+                    if(str2[i].Equals('?')){
+                        answer = str1[i]-'0';
                     }
                     break;
                 }
             }
-            return ans;
+            return answer;
+        }
+
+        public static void Swap(ref string A,ref string B){
+            var temp = A;
+            A = B;
+            B=temp;
         }
     }
 }
