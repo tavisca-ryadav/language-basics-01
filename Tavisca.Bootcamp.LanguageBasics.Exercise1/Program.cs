@@ -41,7 +41,7 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
                 var numeric_A = Convert.ToInt32(A);
                 var numeric_B = Convert.ToInt32(B);
                
-                // findingDigit method will compare two strings  for different characters or length */
+                // FindDigit method will compare two strings  for different characters or length */
                 return FindDigit(Convert.ToString(numeric_A * numeric_B),C);
             }
 
@@ -57,7 +57,7 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
                 if(numeric_C % numeric_B !=0 || numeric_B == 0)
                     return -1;
                 
-                 // findingDigit method will compare two strings  for different characters or length 
+                 // FindDigit method will compare two strings  for different characters or length 
                 return FindDigit(Convert.ToString(numeric_C / numeric_B) , A);
             }
         }
