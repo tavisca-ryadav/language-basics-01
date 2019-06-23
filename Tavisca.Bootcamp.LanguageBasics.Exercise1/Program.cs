@@ -57,7 +57,6 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
                  /* findingDigit method will compare two strings  for different characters or length */
                 return findingDigit(anew,a);
             }
-            throw new NotImplementedException();
         }
 
         public static int findingDigit(string st,string c){
