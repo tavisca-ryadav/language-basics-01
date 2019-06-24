@@ -25,44 +25,48 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
         {
             // Splitting the equation into three parts A,B,C
 
-            List<string> tokens = new List<string>();
+            var tokens = new List<String>();
             tokens = equation.Split('=','*').ToList();
+
+            if(tokens[0]==null || tokens[1]==null || tokens[2]==null)
+                return -1;
+
             var A = tokens[0];
             var B = tokens[1];
             var C = tokens[2];
 
-            //null check on tokens
-            if(A==null || B==null || C==null)
-                return -1;
 
-            // First checking if C contains ? character 
+            // First check if C contains ? character 
 
             if(C.Contains("?")){
-                var numeric_A = Convert.ToInt32(A);
-                var numeric_B = Convert.ToInt32(B);
+                var operand1 = Convert.ToInt32(A);
+                var operand2 = Convert.ToInt32(B);
                
-                // FindDigit method will compare two strings  for different characters or length */
-                return FindDigit(Convert.ToString(numeric_A * numeric_B),C);
+               
+                return FindIndex(Convert.ToString(operand1 * operand2),C);
             }
 
-            // Checking for A only if it contains '?' if B contains then swap B with A */
+           
 
             else{
+                 // if B contains '?' then swap B with A to use same code for different condition
+
                 if(B.Contains("?"))
                     Swap(ref A,ref B);
                     
-                var numeric_C = Convert.ToInt32(C);
-                var numeric_B = Convert.ToInt32(B);
+                var operand3 = Convert.ToInt32(C);
+                var operand2 = Convert.ToInt32(B);
 
-                if(numeric_C % numeric_B !=0 || numeric_B == 0)
+                if(operand3 % operand2 !=0 || operand2 == 0)
                     return -1;
                 
-                 // FindDigit method will compare two strings  for different characters or length 
-                return FindDigit(Convert.ToString(numeric_C / numeric_B) , A);
+                 
+                return FindIndex(Convert.ToString(operand3 / operand2) , A);
             }
         }
 
-        public static int FindDigit(string str1,string str2){
+         // FindDigit method finds the missing digit by compairing calculated string with given string
+        private static int FindIndex(string str1,string str2){
             var answer = -1;
             if(str1.Length!=str2.Length)
                 return answer;
@@ -77,7 +81,7 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
             return answer;
         }
 
-        public static void Swap(ref string A,ref string B){
+        private static void Swap(ref string A,ref string B){
             var temp = A;
             A = B;
             B=temp;
