@@ -65,7 +65,7 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
             }
         }
 
-         // FindDigit method finds the missing digit by compairing calculated string with given string
+         // FindIndex method finds the missing digit by compairing calculated string with given string
         private static int FindIndex(string str1,string str2){
             var answer = -1;
             if(str1.Length!=str2.Length)
