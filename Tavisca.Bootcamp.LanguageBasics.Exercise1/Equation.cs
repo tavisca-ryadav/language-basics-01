@@ -23,11 +23,10 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
         public int CorrectEquationAndReturnMissingDigit()
         {
             var needsCorrection = GetEquationPartToBeCorrected();
-            var expectedValue="";
             switch(needsCorrection)
             {
                 case EquationParts.Operand1:
-                    expectedValue = Convert.ToString( Int32.Parse(Result) / Int32.Parse(Operand2) );
+                    var expectedValue = Convert.ToString( Int32.Parse(Result) / Int32.Parse(Operand2) );
                     if(IsValidValue(expectedValue,Operand1) && IsValidEquation(expectedValue,Operand2,Result))
                         return MatchAndReturnMissingDigit(expectedValue,Operand1);
                     return -1;
