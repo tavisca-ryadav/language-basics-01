@@ -23,9 +23,9 @@ class FixedMultiplication
                 var operand1 = groups[1].Value;
                 var operand2 = groups[2].Value;
                 var result = groups[3].Value;
-                if (string.IsNullOrEmpty(operand1) || string.IsNullOrEmpty(operand2) || string.IsNullOrEmpty(result))
-                    return null;
-                return new Equation(operand1, operand2, "*", result);
+                if (string.IsNullOrEmpty(operand1)==false && string.IsNullOrEmpty(operand2)==false && string.IsNullOrEmpty(result)==false)
+                    return new Equation(operand1, operand2, "*", result);
+                return null;
             }
             return null;
         }

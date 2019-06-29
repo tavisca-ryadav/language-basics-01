@@ -51,26 +51,23 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 
         private bool IsValidValue(string expected,string actual)
         {
-            if(string.IsNullOrEmpty(expected) || string.IsNullOrEmpty(actual))
-                return false;
-            else
+            if(string.IsNullOrEmpty(expected)==false && string.IsNullOrEmpty(actual)==false)
                 return expected.Length == actual.Length;
+            return false;
         }
 
         private bool IsValidEquation(string operand1,string operand2,string result)
         {
-            if(string.IsNullOrEmpty(operand1) || string.IsNullOrEmpty(operand2) || string.IsNullOrEmpty(result))
-                return false;
-            else
+            if(string.IsNullOrEmpty(operand1)==false && string.IsNullOrEmpty(operand2)==false && string.IsNullOrEmpty(result)==false)
                 return Int32.Parse(operand1)*Int32.Parse(operand2) == Int32.Parse(result);
+            return false;
         }
 
         private int MatchAndReturnMissingDigit(string expected, string actual)
         {
-             if(string.IsNullOrEmpty(expected) || string.IsNullOrEmpty(actual))
-                return -1;
-            else
+             if(string.IsNullOrEmpty(expected)==false && string.IsNullOrEmpty(actual)==false)
                 return Int32.Parse(expected[actual.IndexOf('?')].ToString());
+            return -1;
         }
 
 
