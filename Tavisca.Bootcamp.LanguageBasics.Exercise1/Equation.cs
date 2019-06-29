@@ -22,26 +22,26 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 
         public int CorrectEquationAndReturnMissingDigit()
         {
-            EquationParts needsCorrection = GetEquationPartToBeCorrected();
-            string expectedValue;
+            var needsCorrection = GetEquationPartToBeCorrected();
+            var expectedValue="";
             switch(needsCorrection)
             {
                 case EquationParts.Operand1:
                     expectedValue = Convert.ToString( Int32.Parse(Result) / Int32.Parse(Operand2) );
                     if(IsValidValue(expectedValue,Operand1) && IsValidEquation(expectedValue,Operand2,Result))
-                        return GetIndex(expectedValue,Operand1);
+                        return MatchAndReturnMissingDigit(expectedValue,Operand1);
                     return -1;
 
                 case EquationParts.Operand2:
                     expectedValue = Convert.ToString(Int32.Parse(Result) / Int32.Parse(Operand1));
                     if(IsValidValue(expectedValue,Operand2) && IsValidEquation(Operand1,expectedValue,Result))
-                        return GetIndex(expectedValue,Operand2);
+                        return MatchAndReturnMissingDigit(expectedValue,Operand2);
                     return -1;
 
                 case EquationParts.Result:
                     expectedValue = Convert.ToString(Int32.Parse(Operand1) * Int32.Parse(Operand2));
                     if(IsValidValue(expectedValue,Result) && IsValidEquation(Operand1,Operand2,expectedValue))
-                        return GetIndex(expectedValue,Result);
+                        return MatchAndReturnMissingDigit(expectedValue,Result);
                     return -1;
 
                 default: 
@@ -50,20 +50,28 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
             }
         }
 
-        private bool IsValidValue(string expectedValue,string givenValue)
+        private bool IsValidValue(string expected,string actual)
         {
-            return expectedValue.Length == givenValue.Length;
+            if(string.IsNullOrEmpty(expected) || string.IsNullOrEmpty(actual))
+                return false;
+            else
+                return expected.Length == actual.Length;
         }
 
-        private bool IsValidEquation(string operand1,string operand2,string operand3)
+        private bool IsValidEquation(string operand1,string operand2,string result)
         {
-            return Int32.Parse(operand1)*Int32.Parse(operand2) == Int32.Parse(operand3);
-            
+            if(string.IsNullOrEmpty(operand1) || string.IsNullOrEmpty(operand2) || string.IsNullOrEmpty(result))
+                return false;
+            else
+                return Int32.Parse(operand1)*Int32.Parse(operand2) == Int32.Parse(result);
         }
 
-        private int GetIndex(string expected, string actual)
+        private int MatchAndReturnMissingDigit(string expected, string actual)
         {
-            return Int32.Parse(expected[actual.IndexOf('?')].ToString());
+             if(string.IsNullOrEmpty(expected) || string.IsNullOrEmpty(actual))
+                return -1;
+            else
+                return Int32.Parse(expected[actual.IndexOf('?')].ToString());
         }
 
 
