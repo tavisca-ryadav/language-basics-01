@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 {
     class Program
@@ -23,68 +24,135 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 
         public static int FindDigit(string equation)
         {
-            // Splitting the equation into three parts A,B,C
+           return FixedMultiplication.FindDigit(equation);
+        }
+    }
 
-            var tokens = new List<String>();
-            tokens = equation.Split('=','*').ToList();
+    enum EquationParts{
+        Operand1,
+        Operand2,
+        Result,
+        Invalid
 
-            if(tokens[0]==null || tokens[1]==null || tokens[2]==null)
-                return -1;
+    }
 
-            var A = tokens[0];
-            var B = tokens[1];
-            var C = tokens[2];
+    class FixedMultiplication
+    {
+        
+        public static int FindDigit(string equation)
+        {
+           Equation ParsedEquation = ParseEquation(equation);
+           return ParsedEquation.CorrectEquationAndReturnMissingDigit();
+        }
 
+         private static Equation ParseEquation(string equation)
+        {
+            var regex = new Regex(@"(\d*\?*\d*)\*(\d*\?*\d*)=(\d*\?*\d*)", RegexOptions.Compiled);
+            var equationData = regex.Matches(equation);
+            if(equationData != null && equationData[0].Success)
+            {
+                var groups = equationData[0].Groups;
+                var operand1 = groups[1].Value;
+                var operand2 = groups[2].Value;
+                var result = groups[3].Value;
 
-            // First check if C contains ? character 
+ 
 
-            if(C.Contains("?")){
-                var operand1 = Convert.ToInt32(A);
-                var operand2 = Convert.ToInt32(B);
-               
-               
-                return FindIndex(Convert.ToString(operand1 * operand2),C);
+                if (string.IsNullOrEmpty(operand1) || string.IsNullOrEmpty(operand2) || string.IsNullOrEmpty(result))
+                    return null;
+                return new Equation(operand1, operand2, "*", result);
             }
+            return null;
+        }
 
-           
+    }
 
-            else{
-                 // if B contains '?' then swap B with A to use same code for different condition
 
-                if(B.Contains("?"))
-                    Swap(ref A,ref B);
-                    
-                var operand3 = Convert.ToInt32(C);
-                var operand2 = Convert.ToInt32(B);
+    class Equation{
 
-                if(operand3 % operand2 !=0 || operand2 == 0)
+        public Equation(string operand1,string operand2,string operation,string result)
+        {
+            Operand1 = operand1;
+            Operand2 = operand2;
+            Operation = operation;
+            Result = result;
+        }
+
+        public string Operand1 { get; private set; }
+        public string Operand2 { get; private set; }
+        public string Operation { get; private set; }
+        public string Result { get; private set; }
+
+        public int CorrectEquationAndReturnMissingDigit()
+        {
+            EquationParts needCorrection = GetEquationPartToBeCorrected();
+            string expectedValue;
+            bool validValue,validEquation;
+            switch(needCorrection)
+            {
+                case EquationParts.Operand1:
+                    expectedValue = Convert.ToString( int.Parse(Result) / int.Parse(Operand2) );
+                    validValue = IsValidValue(expectedValue,Operand1);
+                    validEquation = IsValidEquation(expectedValue,Operand2,Result);
+
+                    if(validValue && validEquation)
+                        return GetIndex(expectedValue,Operand1);
+                    else
+                        return -1;
+
+                case EquationParts.Operand2:
+                    expectedValue = Convert.ToString(int.Parse(Result) / int.Parse(Operand1));
+                    validValue = IsValidValue(expectedValue,Operand2);
+                    validEquation = IsValidEquation(Operand1,expectedValue,Result);
+
+                    if(validValue && validEquation)
+                        return GetIndex(expectedValue,Operand2);
+                    else
+                        return -1;
+
+                case EquationParts.Result:
+                    expectedValue = Convert.ToString(int.Parse(Operand1) * int.Parse(Operand2));
+                    validValue = IsValidValue(expectedValue,Result);
+                    validEquation = IsValidEquation(Operand1,Operand2,expectedValue);
+
+                    if(validValue && validEquation)
+                        return GetIndex(expectedValue,Result);
+                    else
+                        return -1;
+
+                default: 
                     return -1;
-                
-                 
-                return FindIndex(Convert.ToString(operand3 / operand2) , A);
+
             }
         }
 
-         // FindIndex method finds the missing digit by compairing calculated string with given string
-        private static int FindIndex(string str1,string str2){
-            var answer = -1;
-            if(str1.Length!=str2.Length)
-                return answer;
-            for(var i=0;i<str1.Length;i++){
-                if(str1[i]!=str2[i]){
-                    if(str2[i].Equals('?')){
-                        answer = str1[i]-'0';
-                    }
-                    break;
-                }
-            }
-            return answer;
+        private bool IsValidValue(string expectedValue,string givenValue)
+        {
+            return expectedValue.Length==givenValue.Length;
         }
 
-        private static void Swap(ref string A,ref string B){
-            var temp = A;
-            A = B;
-            B=temp;
+        private bool IsValidEquation(string operand1,string operand2,string operand3)
+        {
+            return int.Parse(operand1)*int.Parse(operand2) == int.Parse(operand3);
+            
+        }
+
+        private int GetIndex(string str1, string str2){
+            int i = str2.IndexOf('?');
+            return str1[i]-'0';
+        }
+
+
+        private EquationParts GetEquationPartToBeCorrected()
+        {
+            if(Operand1.Contains('?'))
+                return EquationParts.Operand1;
+            if(Operand2.Contains('?'))
+                return EquationParts.Operand2;
+            if(Result.Contains('?'))
+                return EquationParts.Result;
+            else
+                return EquationParts.Invalid;
         }
     }
 }
